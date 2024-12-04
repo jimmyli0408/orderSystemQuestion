@@ -104,8 +104,6 @@ public class Solution {
                 int discountRate = getDiscountRate(order.getPrice());
                 int discountedPrice = calculateDiscountedPrice(discountRate, order.getPrice());
                 totalPrice += discountedPrice;
-                System.out.println(discountedPrice);
-                System.out.println(totalPrice);
             }
             return totalPrice;
         }
@@ -155,29 +153,72 @@ public class Solution {
 class Main {
     public static void main(String[] args) {
         Solution solution = new Solution();
+
+        // Create some orders
         Solution.IOrder order1 = solution.new Order();
         Solution.IOrder order2 = solution.new Order();
         Solution.IOrder order3 = solution.new Order();
+        Solution.IOrder order4 = solution.new Order();
 
+        // Set names and prices
         order1.setName("Pizza");
-        order1.setPrice(98);
-        order2.setName("coke");
-        order2.setPrice(9);
+        order1.setPrice(98); // Expensive -> 30% discount
+        order2.setName("Coke");
+        order2.setPrice(9); // Cheap -> 10% discount
         order3.setName("Chicken");
-        order3.setPrice(23);
-//        System.out.println(order1.getPrice());
+        order3.setPrice(15); // Moderate -> 20% discount
+        order4.setName("Burger");
+        order4.setPrice(18); // Moderate -> 20% discount
 
-
+        // Initialize the OrderSystem
         Solution.IOrderSystem orderSystem = solution.new OrderSystem();
+
+        // Insert orders into cart
+        System.out.println("Inserting items into cart...");
         orderSystem.insertPackage(order1);
         orderSystem.insertPackage(order2);
         orderSystem.insertPackage(order3);
-//        orderSystem.removePackageFromCart(order3);
+        orderSystem.insertPackage(order4);
 
+        // Check cart items
+        System.out.println("\nCart Items After Insertion:");
+        printCartItems(orderSystem);
+
+        // Get total costs
+        System.out.println("\nTotal Cost After Inserting Items:");
+        int totalCost = orderSystem.getTotalCosts();
+        System.out.println("Total Cost: " + totalCost);
+
+        // Remove an item from the cart
+        System.out.println("\nRemoving 'Coke' from the cart...");
+        orderSystem.removePackageFromCart(order2);
+
+        // Check cart items after removal
+        System.out.println("\nCart Items After Removing 'Coke':");
+        printCartItems(orderSystem);
+
+        // Get total cost after removing item
+        System.out.println("\nTotal Cost After Removing 'Coke':");
+        totalCost = orderSystem.getTotalCosts();
+        System.out.println("Total Cost: " + totalCost);
+
+        // Add 'Pizza' again to check incrementing quantity
+        System.out.println("\nAdding 'Pizza' again to the cart...");
+        orderSystem.insertPackage(order1);
+
+        // Check cart items after adding 'Pizza' again
+        System.out.println("\nCart Items After Adding 'Pizza' Again:");
+        printCartItems(orderSystem);
+
+        // Get final total cost
+        System.out.println("\nFinal Total Cost After Adding 'Pizza' Again:");
+        totalCost = orderSystem.getTotalCosts();
+        System.out.println("Total Cost: " + totalCost);
+    }
+
+    private static void printCartItems(Solution.IOrderSystem orderSystem) {
         for (Map.Entry<String, Integer> cartItem : orderSystem.cartItems().entrySet()) {
-            System.out.println(cartItem.getKey() + " " + cartItem.getValue());
+            System.out.println("Item: " + cartItem.getKey() + ", Quantity: " + cartItem.getValue());
         }
-
-        System.out.println(orderSystem.getTotalCosts());
     }
 }
